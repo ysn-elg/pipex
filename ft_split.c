@@ -6,7 +6,7 @@
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 10:15:34 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/01 16:03:53 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/04 11:53:07 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ static int	count_words(const char *s, char c)
 	i = 0;
 	while (*s)
 	{
-		while (*s && *s == c)
+		while (*s && (*s == c || *s == '\t'))
 			s++;
 		if (*s)
 			i++;
-		while (*s && *s != c)
+		while (*s && *s != c && *s != '\t')
 			s++;
 	}
 	return (i);
@@ -71,10 +71,10 @@ char	**ft_split(const char *s, char c)
 		return (NULL);
 	while (*s)
 	{
-		while (*s && *s == c)
+		while (*s && (*s == c || *s == '\t'))
 			s++;
 		i = 0;
-		while (s[i] && s[i] != c)
+		while (s[i] && s[i] != c && s[i] != '\t')
 			i++;
 		if (i)
 		{

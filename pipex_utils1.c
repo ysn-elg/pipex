@@ -6,7 +6,7 @@
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 18:57:55 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/02 11:32:17 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/03 20:42:09 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_strlen(const char *s)
 	return (i);
 }
 
-static int	ft_strncmp(const char *s1, const char *s2, size_t n)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t	i;
 
@@ -34,7 +34,7 @@ static int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-static char	*ft_strjoin(char const *s1, char const *s2)
+static char	*ft_strjoin1(char const *s1, char const *s2)
 {
 	int		i;
 	int		j;
@@ -67,7 +67,7 @@ static char	*the_cmd_path(char *cmd, char **paths)
 		return (NULL);
 	while (paths[i])
 	{
-		the_path = ft_strjoin(paths[i], cmd);
+		the_path = ft_strjoin1(paths[i], cmd);
 		if (!the_path)
 			continue; // learn more
 		if (access(the_path, X_OK) == 0)

@@ -6,7 +6,7 @@
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:24:33 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/02 11:40:41 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/04 17:49:51 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int open_files(char *file, char c)
 
 	if (c == 'i')
 		fd = open(file, O_RDONLY);
-	else if (c == 'o')
+	else
 		fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -36,11 +36,12 @@ static void	execute_command(char *cmd, char **envp)
 	cmds = ft_split(cmd, ' ');
 	if (!cmds)
 	{
-		perror("error split");
+		perror("pipex: empty command\n");
+		free_split(cmds);
 		exit(1);
 	}
 	cmd_path = get_cmd_path(cmds[0], envp);
-	if (!cmd_path || !*cmds)
+	if (!cmd_path)
 	{
 		write(2, "pipex: command not found: ", 26);
 		write(2, cmds[0], ft_strlen(cmds[0]));
@@ -48,56 +49,98 @@ static void	execute_command(char *cmd, char **envp)
 		free_split(cmds);
 		exit (127);
 	}
+	// Is directory
+	// Not a directoy
 	execve(cmd_path, cmds, envp);
 	perror("execve failed");
 	free_split(cmds);
 	exit(EXIT_FAILURE);
 }
 
-static void	child_process(char *file1, int fdp[2], char *cmd1, char **envp)
+static void	child_process(int read_fd, int fdp[2], char *cmd1, char **envp)
 {
-	int	fd_in;
-	
-	fd_in = open_files(file1, 'i');
-	dup2(fd_in, STDIN_FILENO);
+	dup2(read_fd, STDIN_FILENO);
 	dup2(fdp[1], STDOUT_FILENO);
-	close(fd_in);
+	close(read_fd);
 	close(fdp[0]);
 	close(fdp[1]);
 	execute_command(cmd1, envp);
 }
 
-static void	parent_process(char *file2, int fdp[2], char *cmd2, char **envp)
+static void	last_child(int read_fd, char *file2, char *cmd2, char **envp)
 {
 	int	fd_out;
 
 	fd_out = open_files(file2, 'o');
+	dup2(read_fd, STDIN_FILENO);
 	dup2(fd_out, STDOUT_FILENO);
-	dup2(fdp[0], STDIN_FILENO);
 	close(fd_out);
-	close(fdp[1]);
-	close(fdp[0]);
+	close(read_fd);
 	execute_command(cmd2, envp);
+}
+
+void	here_doc_fun(char *limiter, int pipe_fd)
+{
+	char	*line;
+
+	write(1, "pipe here_doc> ", 15);
+	while ((line = get_next_line(0)))
+	{
+		if(!ft_strncmp(line, limiter, ft_strlen(limiter)))
+		{
+			free(line);
+			break ;
+		}
+		write(pipe_fd, line, ft_strlen(line));
+		free(line);
+		write(1, "pipe here_doc> ", 15);
+	}
+	close(pipe_fd);
 }
 
 int main (int ac, char ** av, char **envp)
 {
 	pid_t	pid;
 	int		fdp[2];
+	int		read_fd;
+	int		i;
 
-	if (ac != 5)
-		return (write(2, "Usage form: ./pipex file1 cmd1 cmd2 file2\n", 42), 1); // better to use a function
-	if (pipe(fdp) == -1)
-		return(perror("pipe"), 1);
+	if (ac < 5)
+		return (write(2, "Usage: ./pipex file1 cmd1 ... cmdN file2\n", 41), 1);
+	if (!ft_strncmp(av[1], "here_doc", 8)) //////////////////////////////////////////////////
+	{
+		pipe(fdp);
+		here_doc_fun(av[2], fdp[1]);
+		read_fd = fdp[0];
+		i = 3;
+	}
+	else
+	{
+		read_fd = open_files(av[1], 'i');
+		i = 2;
+	}
+	while (i < ac -2)
+	{
+		if (pipe(fdp) == -1)
+			return(perror("pipe"), 1);
+		pid = fork();
+		if (pid == -1)
+			return(perror("fork"), 1);
+		else if (pid == 0)
+			child_process(read_fd, fdp, av[i], envp);
+		close(read_fd);
+		close(fdp[1]);
+		read_fd = fdp[0];
+		i++;
+	}
 	pid = fork();
 	if (pid == -1)
 		return(perror("fork"), 1);
 	if (pid == 0)
-		child_process(av[1], fdp, av[2], envp);
-	else
-	{
-		waitpid(pid, NULL, 0);
-		parent_process(av[4], fdp, av[3], envp);
-	}
+		last_child(read_fd, av[ac -1], av[ac -2], envp);
+	close(read_fd);
+	close(fdp[0]);
+	close(fdp[1]);
+	while (wait(NULL) > 0);//////////////////////////////until false
 	return (0);
 }
