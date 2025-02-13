@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-guad <yel-guad@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:05:13 by yel-guad          #+#    #+#             */
-/*   Updated: 2024/11/23 12:15:58 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/12 22:46:45 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ char	*get_linee(int fd, char *res)
 	while (1)
 	{
 		i = read(fd, buff, BUFFER_SIZE);
-		if (i == -1 || (i == 0 && !res))
+		if (i == -1)
 			return (free(buff), free(res), NULL);
 		if (i == 0)
-			break ;
+			continue ;
 		buff[i] = '\0';
 		tmp = res;
 		res = ft_strjoin(res, buff);

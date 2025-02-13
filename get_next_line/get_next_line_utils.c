@@ -6,21 +6,21 @@
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:05:30 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/03 20:44:49 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/13 16:41:57 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-// size_t	ft_strlen(const char *str)
-// {
-// 	size_t	i;
+int	ft_strlen(const char *str)
+{
+	int	i;
 
-// 	i = 0;
-// 	while (str[i])
-// 		i++;
-// 	return (i);
-// }
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 char	*ft_strdup(const char *s1)
 {

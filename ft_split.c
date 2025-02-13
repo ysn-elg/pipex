@@ -6,7 +6,7 @@
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 10:15:34 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/04 11:53:07 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:39:27 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 void	free_split(char **array)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!array)
-		return;
+		return ;
 	while (array[i])
 		free(array[i++]);
 	free(array);
@@ -67,7 +68,8 @@ char	**ft_split(const char *s, char c)
 	char	**res;
 
 	j = 0;
-	if (!s || !(res = malloc(sizeof(char *) * (count_words(s, c) + 1))))
+	res = malloc(sizeof(char *) * (count_words(s, c) + 1));
+	if (!res)
 		return (NULL);
 	while (*s)
 	{
@@ -78,12 +80,11 @@ char	**ft_split(const char *s, char c)
 			i++;
 		if (i)
 		{
-			if (!(res[j] = word_dup(s, i)))
-				return (free_all(res, j), NULL);
-			j++;
+			res[j] = word_dup(s, i);
+			if (!res[j++])
+				return (free_all(res, --j), NULL);
 			s += i;
 		}
 	}
-	res[j] = NULL;
-	return (res);
+	return ((res[j] = NULL), res);
 }

@@ -6,7 +6,7 @@
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:05:45 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/03 16:59:48 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/12 19:00:56 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 10
 # endif
 
 char	*get_next_line(int fd);
 char	*get_the_line(char *buff);
 char	*get_linee(int fd, char *res);
 char	*get_rest(char *buff);
-int 	ft_strlen(const char *str);
+int		ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);

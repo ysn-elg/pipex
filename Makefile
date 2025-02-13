@@ -1,12 +1,12 @@
 NAME = pipex
 
-SRC = pipex.c ft_split.c pipex_utils1.c  get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
+SRC = pipex.c ft_split.c util1.c util2.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 
 OBJ = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 
