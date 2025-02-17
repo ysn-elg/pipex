@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:24:33 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/13 12:21:52 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/14 10:25:21 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 static void	child_process(int read_fd, int fdp[2], char *cmd, char **envp)
 {
@@ -49,7 +49,7 @@ static void	execute_last_child(int read_fd, int ac, char **av, char **env)
 {
 	int	fd_out;
 
-	if (!ft_strncmp(av[1], "here_doc", 8))
+	if (!ft_strncmp(av[1], "here_doc", 9))
 		fd_out = open_files(av[ac -1], 'h');
 	else
 		fd_out = open_files(av[ac -1], 'o');
@@ -81,14 +81,14 @@ int	main(int ac, char **av, char **env)
 	char	*file1;
 
 	if (ac < 5)
-		return (print_error(av[1]), 1);
+		return (print_error(av), 1);
 	file1 = av[1];
 	i = 2;
 	read_fd = -1;
 	if (!ft_strncmp(av[1], "here_doc", 9))
 	{
 		if (ac != 6)
-			return (print_error(av[1]), 1);
+			return (print_error(av), 1);
 		read_fd = here_doc_fun(av[2]);
 		file1 = NULL;
 		i = 3;

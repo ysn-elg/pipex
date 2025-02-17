@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util2.c                                            :+:      :+:    :+:   */
+/*   util2_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 18:57:55 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/12 22:42:42 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:46:52 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void	error_cmd_not_found(char **cmds, char *cmd_path)
 {
@@ -65,23 +65,22 @@ static char	*the_cmd_path(char *cmd, char **paths)
 {
 	int		i;
 	char	*the_path;
-	char	*tmp;
+	char	*s_cmd;
 
 	i = 0;
 	if (!cmd)
 		return (NULL);
+	s_cmd = ft_strjoin("/", cmd);
 	while (paths[i])
 	{
-		tmp = ft_strjoin(paths[i], "/");
-		the_path = ft_strjoin(tmp, cmd);
-		free(tmp);
+		the_path = ft_strjoin(paths[i++], s_cmd);
 		if (!the_path)
 			continue ;
 		if (access(the_path, X_OK) == 0)
 			return (the_path);
 		free(the_path);
-		i++;
 	}
+	free(s_cmd);
 	return (NULL);
 }
 
@@ -96,26 +95,22 @@ static char	*slashcmd(char *cmd)
 char	*get_cmd_path(char *cmd, char **envp)
 {
 	int		i;
-	char	*path_env;
 	char	**paths;
 	char	*cmd_path;
 
 	i = 0;
-	path_env = NULL;
+	paths = NULL;
 	if (ft_strchr(cmd, '/'))
 		return (slashcmd(cmd));
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
-			path_env = envp[i] + 5;
+			paths = ft_split(envp[i] + 5, ':');
 			break ;
 		}
 		i++;
 	}
-	if (!path_env)
-		return (NULL);
-	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
 	cmd_path = the_cmd_path(cmd, paths);

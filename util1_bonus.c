@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util1.c                                            :+:      :+:    :+:   */
+/*   util1_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yel-guad <yel-guad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 10:41:46 by yel-guad          #+#    #+#             */
-/*   Updated: 2025/02/13 17:14:11 by yel-guad         ###   ########.fr       */
+/*   Updated: 2025/02/15 12:11:34 by yel-guad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 int	open_files(char *file, char c)
 {
@@ -94,10 +94,10 @@ int	here_doc_fun(char *limiter)
 	return (fdp[0]);
 }
 
-void	print_error(char *hd)
+void	print_error(char **av)
 {
-	if (ft_strncmp(hd, "here_doc", 8))
-		write(2, "Usage: ./pipex file1 cmd1 ... cmdN file2\n", 41);
-	else
+	if (av[1] && !ft_strncmp(av[1], "here_doc", 9))
 		write(2, "Usage: ./pipex here_doc LIMITER cmd cmd1 file\n", 47);
+	else
+		write(2, "Usage: ./pipex file1 cmd1 ... cmdN file2\n", 41);
 }
